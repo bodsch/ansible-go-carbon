@@ -1,0 +1,28 @@
+---
+
+- name: download go-carbon binary to local folder
+  become: false
+  get_url:
+    url: "https://github.com/lomik/go-carbon/releases/download/v{{ go_carbon_version }}/{{ go_carbon_artefact }}"
+    dest: "/tmp/{{ go_carbon_artefact }}"
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  delegate_to: localhost
+  check_mode: false
+
+- name: propagate go-carbon package
+  copy:
+    src: "/tmp/{{ go_carbon_artefact }}"
+    dest: /tmp
+    mode: 0755
+    owner: root
+    group: root
+
+- name: install go-carbon package
+  apt:
+    deb: "/tmp/{{ go_carbon_artefact }}"
+    force: "{{ false if go_carbon_installed_version.changed else go_carbon_installed_version.stdout | version_compare(go_carbon_version | regex_replace('^v',''), '>') }}"
+  when: ( go_carbon_should_install and
+    ansible_os_family | lower == 'debian')

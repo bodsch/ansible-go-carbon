@@ -1,0 +1,59 @@
+---
+
+go_carbon_version: latest
+
+# Allow pre-release (beta) versions
+go_carbon_pre_release: true
+
+# Reinstall if there's a new version
+go_carbon_latest: true
+
+# common config
+go_carbon_common_max_cpu: 1
+go_carbon_common_metric_interval: '0m30s'
+
+# whisper config
+go_carbon_whisper_data_directory: /srv/graphite/whisper
+go_carbon_whisper_schemas_file: /etc/go-carbon/storage-schemas.conf
+go_carbon_whisper_aggregation_file: /etc/go-carbon/storage-aggregation.conf
+go_carbon_whisper_workers: 1
+go_carbon_whisper_max_updates_per_second: 10000
+go_carbon_whisper_sparse_create: false
+
+go_carbon_udp_enabled: true
+go_carbon_udp_listen: ':2003'
+go_carbon_udp_log_incomplete: false
+go_carbon_udp_buffer_size: 2000
+
+go_carbon_tcp_enabled: true
+go_carbon_tcp_listen: ':2003'
+go_carbon_tcp_buffer_size: 2000
+
+go_carbon_pickle_enabled: false
+go_carbon_pickle_listen: ':2004'
+go_carbon_pickle_max_message_size: 67108864
+go_carbon_pickle_buffer_size: 2000
+
+go_carbon_carbonlink_enabled: true
+go_carbon_carbonlink_listen: ':7002'
+go_carbon_carbonlink_read_timeout: '30s'
+go_carbon_carbonlink_query_timeout: '100ms'
+
+go_carbon_grpc_enabled: true
+go_carbon_grpc_listen: ':7003'
+
+go_carbon_carbonserver_enabled: true
+go_carbon_carbonserver_listen: ':8081'
+
+go_carbon_dump_enabled: false
+
+go_carbon_pprof_enabled: false
+
+go_carbon_logging:
+  - default:
+    logger: ''
+    file: stdout
+    level: info
+    encoding: mixed
+    encoding_time: iso8601
+    encoding_duration: seconds

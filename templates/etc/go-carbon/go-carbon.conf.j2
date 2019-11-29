@@ -1,0 +1,81 @@
+[common]
+user = "{{ go_carbon_common_user | default('carbon') }}"
+graph-prefix = "carbon.agents.{host}"
+metric-endpoint = "local"
+max-cpu = {{ go_carbon_common_max_cpu }}
+metric-interval = "{{ go_carbon_common_metric_interval }}"
+
+[whisper]
+data-dir = "{{ go_carbon_whisper_data_directory }}"
+schemas-file = "{{ go_carbon_whisper_schemas_file }}"
+aggregation-file = "{{ go_carbon_whisper_aggregation_file }}"
+workers = {{ go_carbon_whisper_workers }}
+max-updates-per-second = {{ go_carbon_whisper_max_updates_per_second | int }}
+sparse-create = {{ go_carbon_whisper_sparse_create | bool | ternary('true', 'false') }}
+
+[cache]
+max-size = 1000000
+input-buffer = 51200
+# write-strategy = "noop"
+
+[udp]
+enabled = {{ go_carbon_udp_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_udp_listen }}"
+log-incomplete = {{ go_carbon_udp_log_incomplete | bool | ternary('true', 'false') }}
+buffer-size = {{ go_carbon_udp_buffer_size }}
+
+[tcp]
+enabled = {{ go_carbon_tcp_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_tcp_listen }}"
+buffer-size = {{ go_carbon_tcp_buffer_size }}
+
+[pickle]
+enabled = {{ go_carbon_pickle_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_pickle_listen }}"
+max-message-size = 67108864
+buffer-size = 2000
+
+[carbonlink]
+enabled = {{ go_carbon_carbonlink_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_carbonlink_listen }}"
+read-timeout = "30s"
+query-timeout = "100ms"
+
+[grpc]
+enabled = {{ go_carbon_grpc_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_grpc_listen }}"
+
+[carbonserver]
+enabled = {{ go_carbon_carbonserver_enabled | bool | ternary('true', 'false') }}
+listen = "{{ go_carbon_carbonserver_listen }}"
+query-cache-enabled = true
+query-cache-size-mb = 0
+find-cache-enabled = true
+buckets = 10
+max-globs = 100
+fail-on-max-globs = false
+metrics-as-counters = false
+trigram-index = true
+graphite-web-10-strict-mode = true
+internal-stats-dir = ""
+read-timeout = "1m0s"
+idle-timeout = "1m0s"
+write-timeout = "1m0s"
+scan-frequency = "5m0s"
+
+[dump]
+enabled = {{ go_carbon_dump_enabled | bool | ternary('true', 'false') }}
+path = "/var/lib/graphite/dump/"
+restore-per-second = 0
+
+[pprof]
+enabled = {{ go_carbon_pprof_enabled | bool | ternary('true', 'false') }}
+listen = ":7007"
+
+[[logging]]
+logger = ""
+file = "/var/log/go-carbon/go-carbon.log"
+level = "info"
+encoding = "mixed"
+encoding-time = "iso8601"
+encoding-duration = "seconds"

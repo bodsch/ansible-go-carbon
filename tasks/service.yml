@@ -1,0 +1,7 @@
+---
+
+- name: ensure go-carbon is started
+  service:
+    name: go-carbon
+    state: started
+    enabled: true

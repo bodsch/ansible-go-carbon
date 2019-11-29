@@ -1,0 +1,6 @@
+---
+
+- name: restart go-carbon
+  service:
+    name: go-carbon
+    state: restarted

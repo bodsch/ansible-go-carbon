@@ -1,0 +1,13 @@
+---
+
+- name: create configs
+  template:
+    src: "etc/go-carbon/{{ item }}.j2"
+    dest: "/etc/go-carbon/{{ item }}"
+    backup: true
+  loop:
+    - go-carbon.conf
+    - storage-schemas.conf
+    - storage-aggregation.conf
+  notify:
+    - restart go-carbon

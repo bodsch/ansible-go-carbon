@@ -1,0 +1,18 @@
+---
+
+- name: install requirements
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    "{{ go_carbon_dependencies }}"
+
+- name: create required directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: carbon
+    group: carbon
+  loop:
+    - "{{ go_carbon_whisper_data_directory }}"
+    - /var/log/go-carbon
