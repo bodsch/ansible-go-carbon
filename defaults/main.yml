@@ -8,6 +8,9 @@ go_carbon_pre_release: true
 # Reinstall if there's a new version
 go_carbon_latest: true
 
+graphite_user: carbon
+graphite_group: carbon
+
 # common config
 go_carbon_common_max_cpu: 1
 go_carbon_common_metric_interval: '0m30s'

@@ -7,12 +7,26 @@
   loop:
     "{{ go_carbon_dependencies }}"
 
+- name: create {{ graphite_group }} group
+  group:
+    name: "{{ graphite_group }}"
+    state: present
+
+- name: create {{ graphite_user }} user
+  user:
+    name: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    shell: /sbin/nologin
+    createhome: true
+    comment: Graphite user
+    home: /home/graphite
+
 - name: create required directories
   file:
     dest: "{{ item }}"
     state: directory
-    owner: carbon
-    group: carbon
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
   loop:
     - "{{ go_carbon_whisper_data_directory }}"
     - /var/log/go-carbon
