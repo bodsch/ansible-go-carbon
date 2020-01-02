@@ -1,7 +1,3 @@
 ---
 
-go_carbon_dependencies:
-  - python-httplib2
-
-
 sysconfig_directory: "/etc/default"

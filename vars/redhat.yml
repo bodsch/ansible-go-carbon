@@ -1,8 +1,3 @@
 ---
 
-go_carbon_dependencies: []
-#  - unzip
-#  - libselinux-python
-#  - policycoreutils-python
-
 sysconfig_directory: "/etc/sysconfig"

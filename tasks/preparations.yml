@@ -1,12 +1,5 @@
 ---
 
-- name: install requirements
-  package:
-    name: "{{ item }}"
-    state: present
-  loop:
-    "{{ go_carbon_dependencies }}"
-
 - name: create {{ graphite_group }} group
   group:
     name: "{{ graphite_group }}"

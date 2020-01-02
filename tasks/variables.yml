@@ -4,7 +4,7 @@
   shell: |
     go-carbon --version
   register: go_carbon_installed_version
-  failed_when: no
+  failed_when: false
   changed_when: go_carbon_installed_version.rc != 0
 
 - block:
@@ -23,14 +23,15 @@
       until: _latest_release.status == 200
       retries: 5
 
-    - name: set go-carbon version to {{ _latest_release.json.tag_name[1:] }}
+    - name: set go-carbon version
       set_fact:
         go_carbon_version: "{{ _latest_release.json.tag_name[1:] }}"
+
   when: go_carbon_version == 'latest'
 
 - name: if installation required
   set_fact:
-    go_carbon_should_install: "{{ true if go_carbon_installed_version.changed else go_carbon_installed_version.stdout is version_compare( go_carbon_version | regex_replace('^v',''), '!=' ) if go_carbon_latest else false }}"
+    go_carbon_should_install: "{{ true if go_carbon_installed_version.changed else go_carbon_installed_version.stdout is version( go_carbon_version | regex_replace('^v',''), '!=' ) if go_carbon_latest else false }}"  # noqa 204
 
 - name: set artefact name for download
   set_fact:

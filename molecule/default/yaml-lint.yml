@@ -2,5 +2,11 @@
 extends: default
 rules:
   line-length:
-    max: 170
+    max: 230
     level: warning
+
+ignore: |
+  tests/
+  molecule/
+  .molecule/
+  .travis.yml
