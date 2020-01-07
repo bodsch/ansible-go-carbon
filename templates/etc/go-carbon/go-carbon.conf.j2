@@ -6,6 +6,7 @@ max-cpu = {{ go_carbon_common_max_cpu }}
 metric-interval = "{{ go_carbon_common_metric_interval }}"
 
 [whisper]
+enabled = true
 data-dir = "{{ go_carbon_whisper_data_directory }}"
 schemas-file = "{{ go_carbon_whisper_schemas_file }}"
 aggregation-file = "{{ go_carbon_whisper_aggregation_file }}"
@@ -13,10 +14,24 @@ workers = {{ go_carbon_whisper_workers }}
 max-updates-per-second = {{ go_carbon_whisper_max_updates_per_second | int }}
 sparse-create = {{ go_carbon_whisper_sparse_create | bool | ternary('true', 'false') }}
 
+# Softly limits the number of whisper files that get created each second. 0 - no limit
+max-creates-per-second = 0
+# Make max-creates-per-second a hard limit. Extra new metrics are dropped. A hard throttle of 0 drops all new metrics.
+hard-max-creates-per-second = false
+# use flock on every file call (ensures consistency if there are concurrent read/writes to the same file)
+flock = true
+# Use hashed filenames for tagged metrics instead of human readable
+# https://github.com/lomik/go-carbon/pull/225
+hash-filenames = true
+# specify to enable/disable compressed format. IMPORTANT: Only one process/thread could write to compressed whisper files at a time, especially when you are rebalancing graphite clusters (with buckytools, for example), flock needs to be enabled both in go-carbon and your tooling.
+compressed = false
+# automatically delete empty whisper file caused by edge cases like server reboot
+remove-empty-file = false
+
 [cache]
 max-size = 1000000
 input-buffer = 51200
-# write-strategy = "noop"
+write-strategy = "max"
 
 [udp]
 enabled = {{ go_carbon_udp_enabled | bool | ternary('true', 'false') }}
@@ -39,29 +54,84 @@ buffer-size = 2000
 enabled = {{ go_carbon_carbonlink_enabled | bool | ternary('true', 'false') }}
 listen = "{{ go_carbon_carbonlink_listen }}"
 read-timeout = "30s"
-query-timeout = "100ms"
 
 [grpc]
 enabled = {{ go_carbon_grpc_enabled | bool | ternary('true', 'false') }}
 listen = "{{ go_carbon_grpc_listen }}"
+
+# http://graphite.readthedocs.io/en/latest/tags.html
+[tags]
+enabled = false
+# TagDB url. It should support /tags/tagMultiSeries endpoint
+tagdb-url = "http://127.0.0.1:8000"
+tagdb-chunk-size = 32
+tagdb-update-interval = 100
+# Directory for send queue (based on leveldb)
+local-dir = "/var/lib/graphite/tagging/"
+# POST timeout
+tagdb-timeout = "1s"
 
 [carbonserver]
 enabled = {{ go_carbon_carbonserver_enabled | bool | ternary('true', 'false') }}
 listen = "{{ go_carbon_carbonserver_listen }}"
 query-cache-enabled = true
 query-cache-size-mb = 0
+
+# Enable /metrics/find cache, it will cache the result for 5 minutes
 find-cache-enabled = true
-buckets = 10
-max-globs = 100
-fail-on-max-globs = false
-metrics-as-counters = false
-trigram-index = true
-graphite-web-10-strict-mode = true
-internal-stats-dir = ""
-read-timeout = "1m0s"
-idle-timeout = "1m0s"
-write-timeout = "1m0s"
+
+# Buckets to track response times
+buckets = 100
+
+# carbonserver keeps track of all available whisper files
+# in memory. This determines how often it will check FS
+# for new or deleted metrics.
 scan-frequency = "5m0s"
+
+# Control trigram index
+#  This index is used to speed-up /find requests
+#  However, it will lead to increased memory consumption
+#  Estimated memory consumption is approx. 500 bytes per each metric on disk
+#  Another drawback is that it will recreate index every scan-frequency interval
+#  All new/deleted metrics will still be searchable until index is recreated
+trigram-index = true
+
+# Maximum amount of globs in a single metric in index
+# This value is used to speed-up /find requests with
+# a lot of globs, but will lead to increased memory consumption
+max-globs = 1000
+
+# Fail if amount of globs more than max-globs
+fail-on-max-globs = false
+
+# Maximum metrics could be returned by glob/wildcard in find request (currently
+# works only for trie index)
+max-metrics-globbed  = 30000
+
+# Maximum metrics could be returned in render request (works both all types of indexes)
+max-metrics-rendered = 1000
+
+# graphite-web-10-mode
+# Use Graphite-web 1.0 native structs for pickle response
+# This mode will break compatibility with graphite-web 0.9.x
+# If false, carbonserver won't send graphite-web 1.0 specific structs
+# That might degrade performance of the cluster
+# But will be compatible with both graphite-web 1.0 and 0.9.x
+graphite-web-10-strict-mode = true
+
+# Allows to keep track for "last time readed" between restarts, leave empty to disable
+internal-stats-dir = ""
+
+# Calculate /render request time percentiles for the bucket, '95' means calculate 95th Percentile. To disable this feature, leave the list blank
+stats-percentiles = [99, 98, 95, 75, 50]
+
+read-timeout = "1m0s"
+write-timeout = "1m0s"
+idle-timeout = "1m0s"
+
+# carbonserver-specific metrics will be sent as counters
+# For compatibility with grobian/carbonserver
+metrics-as-counters = false
 
 [dump]
 enabled = {{ go_carbon_dump_enabled | bool | ternary('true', 'false') }}
