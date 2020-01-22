@@ -40,5 +40,5 @@
 
 - name: set artefact name for download
   set_fact:
-    go_carbon_artefact: "go-carbon_{{ go_carbon_version }}-1.{{ ansible_machine }}.rpm"
+    go_carbon_artefact: "go-carbon-{{ go_carbon_version }}-1.{{ ansible_machine }}.rpm"
   when: ansible_os_family | lower == 'redhat'
