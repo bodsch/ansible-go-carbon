@@ -24,9 +24,16 @@
   set_fact:
     force_install: "{{ false if go_carbon_installed_version.changed else go_carbon_installed_version.stdout is version(go_carbon_version | regex_replace('^v',''), '>') }}"  # noqa 204
 
-- name: install go-carbon package
+- name: install go-carbon package for debian based systems
   apt:
     deb: "/tmp/{{ go_carbon_artefact }}"
     force: "{{ force_install | bool }}"
   when: ( go_carbon_should_install and
     ansible_os_family | lower == 'debian')
+
+- name: install go-carbon package for redhat based systems
+  yum:
+    name: "/tmp/{{ go_carbon_artefact }}"
+    allow_downgrade: "{{ force_install | bool }}"
+  when: ( go_carbon_should_install and
+    ansible_os_family | lower == 'redhat')
