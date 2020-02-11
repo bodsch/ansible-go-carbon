@@ -42,3 +42,11 @@
   set_fact:
     go_carbon_artefact: "go-carbon-{{ go_carbon_version }}-1.{{ ansible_machine }}.rpm"
   when: ansible_os_family | lower == 'redhat'
+
+- name: merge storage schema between defaults and custom
+  set_fact:
+    go_carbon_storage_schemas: "{{ go_carbon_storage_default_schema | combine( go_carbon_storage_schema ) }}"
+
+- name: merge storage aggregation between defaults and custom
+  set_fact:
+    go_carbon_storage_aggregations: "{{ go_carbon_storage_default_aggregation | combine( go_carbon_storage_aggregation, recursive=True ) }}"

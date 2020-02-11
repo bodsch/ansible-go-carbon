@@ -46,19 +46,22 @@ platforms:
   #   privileged: true
   #   volumes:
   #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #
-  # - name: debian-10
-  #   image: paulfantom/debian-molecule:10
-  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
-  #   privileged: true
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
+  - name: debian-10
+    image: paulfantom/debian-molecule:10
+    docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 provisioner:
   name: ansible
-  ansible_args:
-    - --diff
+  # ansible_args:
+  #   - --diff
+  #   - -vvv
+  # config_options:
+  #   defaults:
+  #     callback_whitelist: profile_tasks
   lint:
     name: ansible-lint
   playbooks:

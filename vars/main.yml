@@ -1,4 +1,5 @@
 ---
+
 go_arch_map:
   i386: '386'
   x86_64: 'amd64'
@@ -7,3 +8,63 @@ go_arch_map:
   armv6l: 'armv6'
 
 go_arch: "{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+
+
+_systemd_lib_directory:
+  default: /lib/systemd/system
+  debian: /lib/systemd/system
+  redhat: /usr/lib/systemd/system
+
+systemd_lib_directory: "{{
+  _systemd_lib_directory[ansible_os_family | lower] |
+  default(_systemd_lib_directory['default']) }}"
+
+
+go_carbon_storage_default_schema:
+  carbon:
+    # 1 Host and 1 Metric produce: 793.20 Kilobytes
+    pattern: '^carbon\.'
+    retentions: '10s:24h,30s:4d,1m:21d,5m:40d,15m:60d'
+  collectd:
+    # 1 Host and 1 Metric produce: 860.69 Kilobytes
+    pattern: '^collectd\.'
+    retentions: '10s:2d,30s:7d,1m:21d,1h:240d'
+
+
+go_carbon_storage_default_aggregation:
+  min:
+    pattern: '\.min$'
+    xFilesFactor: 0.1
+    aggregationMethod: min
+  max:
+    pattern: '\.max(_\d+)?$'
+    xFilesFactor: 0.1
+    aggregationMethod: max
+  sum:
+    pattern: '\.sum$'
+    xFilesFactor: 0
+    aggregationMethod: sum
+  count:
+    pattern: '\.count$'
+    xFilesFactor: 0
+    aggregationMethod: sum
+  count_legacy:
+    pattern: '^stats_counts.*'
+    xFilesFactor: 0
+    aggregationMethod: sum
+  ratio:
+    pattern: '\.ratio$'
+    xFilesFactor: 0.1
+    aggregationMethod: average
+  m1_rate:
+    pattern: '\.m1_rate$'
+    xFilesFactor: 0.1
+    aggregationMethod: sum
+  p95:
+    pattern: '\.p95$'
+    xFilesFactor: 0.1
+    aggregationMethod: max
+  default_average:
+    pattern: '.*'
+    xFilesFactor: 0.5
+    aggregationMethod: average
