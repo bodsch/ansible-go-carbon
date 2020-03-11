@@ -5,3 +5,8 @@
     NETRC: ''
   roles:
     - role: ansible-go-carbon
+      vars:
+        go_carbon_storage_schema:
+          test:
+            pattern: '^test\.'
+            retentions: '5m:30d'

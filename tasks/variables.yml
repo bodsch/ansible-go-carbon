@@ -31,7 +31,11 @@
 
 - name: if installation required
   set_fact:
-    go_carbon_should_install: "{{ true if go_carbon_installed_version.changed else go_carbon_installed_version.stdout is version( go_carbon_version | regex_replace('^v',''), '!=' ) if go_carbon_latest else false }}"  # noqa 204
+    go_carbon_should_install: "{{ true
+      if go_carbon_installed_version.changed
+      else go_carbon_installed_version.stdout is version( go_carbon_version |
+      regex_replace('^v',''), '!=' )
+      if go_carbon_latest else false }}"  # noqa 204
 
 - name: set artefact name for download
   set_fact:

@@ -30,7 +30,6 @@ go_carbon_storage_default_schema:
     pattern: '^collectd\.'
     retentions: '10s:2d,30s:7d,1m:21d,1h:240d'
 
-
 go_carbon_storage_default_aggregation:
   min:
     pattern: '\.min$'
@@ -68,3 +67,8 @@ go_carbon_storage_default_aggregation:
     pattern: '.*'
     xFilesFactor: 0.5
     aggregationMethod: average
+  default:
+    pattern: '.*'
+    xFilesFactor: 0.5
+    aggregationMethod: average
+

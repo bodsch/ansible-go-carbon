@@ -22,7 +22,10 @@
 
 - name: set force install
   set_fact:
-    force_install: "{{ false if go_carbon_installed_version.changed else go_carbon_installed_version.stdout is version(go_carbon_version | regex_replace('^v',''), '>') }}"  # noqa 204
+    force_install: "{{ false
+      if go_carbon_installed_version.changed
+      else go_carbon_installed_version.stdout is version(go_carbon_version |
+      regex_replace('^v',''), '>') }}"  # noqa 204
 
 - name: install go-carbon package for debian based systems
   apt:

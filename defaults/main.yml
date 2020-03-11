@@ -52,6 +52,7 @@ go_carbon_dump_enabled: false
 
 go_carbon_pprof_enabled: false
 
+# # Log level: "debug", "info", "warn", "error", "dpanic", "panic", and "fatal"
 go_carbon_logging:
   - default:
     logger: ''

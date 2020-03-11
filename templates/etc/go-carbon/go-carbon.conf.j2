@@ -18,15 +18,25 @@ sparse-create = {{ go_carbon_whisper_sparse_create | bool | ternary('true', 'fal
 
 # Softly limits the number of whisper files that get created each second. 0 - no limit
 max-creates-per-second = 0
-# Make max-creates-per-second a hard limit. Extra new metrics are dropped. A hard throttle of 0 drops all new metrics.
+
+# Make max-creates-per-second a hard limit. Extra new metrics are dropped.
+# A hard throttle of 0 drops all new metrics.
 hard-max-creates-per-second = false
-# use flock on every file call (ensures consistency if there are concurrent read/writes to the same file)
+
+# use flock on every file call (ensures consistency if there are concurrent
+# read/writes to the same file)
 flock = true
+
 # Use hashed filenames for tagged metrics instead of human readable
 # https://github.com/lomik/go-carbon/pull/225
 hash-filenames = true
-# specify to enable/disable compressed format. IMPORTANT: Only one process/thread could write to compressed whisper files at a time, especially when you are rebalancing graphite clusters (with buckytools, for example), flock needs to be enabled both in go-carbon and your tooling.
+
+# specify to enable/disable compressed format.
+# IMPORTANT: Only one process/thread could write to compressed whisper files at a time,
+# especially when you are rebalancing graphite clusters (with buckytools, for example),
+# flock needs to be enabled both in go-carbon and your tooling.
 compressed = false
+
 # automatically delete empty whisper file caused by edge cases like server reboot
 remove-empty-file = false
 
@@ -64,12 +74,15 @@ listen = "{{ go_carbon_grpc_listen }}"
 # http://graphite.readthedocs.io/en/latest/tags.html
 [tags]
 enabled = false
+
 # TagDB url. It should support /tags/tagMultiSeries endpoint
 tagdb-url = "http://127.0.0.1:8000"
 tagdb-chunk-size = 32
 tagdb-update-interval = 100
+
 # Directory for send queue (based on leveldb)
 local-dir = "/var/lib/graphite/tagging/"
+
 # POST timeout
 tagdb-timeout = "1s"
 

@@ -1,14 +1,11 @@
 ---
-dependency:
-  name: galaxy
 
 driver:
   name: docker
 
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/yaml-lint.yml
+lint: |
+    yamllint .
+    ansible-lint
 
 platforms:
 
@@ -25,21 +22,14 @@ platforms:
   #   privileged: true
   #   volumes:
   #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #
-  # - name: ubuntu-16
-  #   image: paulfantom/ubuntu-molecule:16.04
-  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
-  #   privileged: true
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #
-  # - name: ubuntu-18
-  #   image: paulfantom/ubuntu-molecule:18.04
-  #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
-  #   privileged: true
-  #   volumes:
-  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  #
+
+  - name: ubuntu-18
+    image: paulfantom/ubuntu-molecule:18.04
+    docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
   # - name: debian-9
   #   image: paulfantom/debian-molecule:9
   #   docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
@@ -56,12 +46,17 @@ platforms:
 
 provisioner:
   name: ansible
-  # ansible_args:
-  #   - --diff
+  ansible_args:
+    - --diff
   #   - -vvv
-  # config_options:
-  #   defaults:
-  #     callback_whitelist: profile_tasks
+  config_options:
+    defaults:
+      host_key_checking: False
+      deprecation_warnings: True
+      interpreter_python: auto
+      # callback_whitelist: profile_tasks
+      # gather_subset: '!hardware'
+
   lint:
     name: ansible-lint
   playbooks:
@@ -71,7 +66,6 @@ provisioner:
     destroy: destroy.yml
 
 scenario:
-  name: default
   test_sequence:
     - lint
     - destroy
@@ -85,6 +79,3 @@ scenario:
 
 verifier:
   name: testinfra
-  lint:
-    name: flake8
-    enabled: true
