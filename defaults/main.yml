@@ -12,7 +12,7 @@ graphite_user: carbon
 graphite_group: carbon
 
 # common config
-go_carbon_common_max_cpu: 1
+go_carbon_common_max_cpu: 2
 go_carbon_common_metric_interval: '1m0s'
 
 # whisper config
