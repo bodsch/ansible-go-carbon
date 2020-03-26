@@ -11,6 +11,10 @@ go_carbon_latest: true
 graphite_user: carbon
 graphite_group: carbon
 
+go_carbon_used_cron_daemon: cronie
+go_carbon_clean_data_enabled: True
+go_carbon_clean_data_after_days: 180
+
 # common config
 go_carbon_common_max_cpu: 2
 go_carbon_common_metric_interval: '1m0s'

@@ -40,3 +40,27 @@
     allow_downgrade: "{{ force_install | bool }}"
   when: ( go_carbon_should_install and
     ansible_os_family | lower == 'redhat')
+
+- block:
+    - name: install script to clean whisper data
+      template:
+        src: clean-whisper-data.sh.j2
+        dest: /usr/local/bin/clean-whisper-data.sh
+        mode: 0750
+
+    - name: ensure cron daemon is installed
+      package:
+        name: "{{ go_carbon_used_cron_daemon }}"
+        state: present
+
+    - name: configure clean-whisper script 2/m with cron
+      cron:
+        name: "clean whisper data"
+        minute: '0'
+        hour: '23'
+        day: 2,16
+        user: root
+        job: /usr/local/bin/clean-whisper-data.sh
+        cron_file: clean_whisper_data
+
+  when: go_carbon_clean_data_enabled is defined and go_carbon_clean_data_enabled

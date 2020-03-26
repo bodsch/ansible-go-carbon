@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# taken from https://www.unixe.de/whisper-daten-aufraeumen/
+# thanks to sys-adm-ma! <3
+
+PROG=$(basename $0)
+WHISPER_DATA="{{ go_carbon_whisper_data_directory }}"
+DAYS="{{ go_carbon_clean_data_after_days }}"
+
+logger "=> Starting ${PROG}"
+
+SAVED_SPACE="$(find \
+  ${WHISPER_DATA} \
+  -type f \
+  -name '*.wsp' \
+  -mtime +$DAYS \
+  -exec echo -n -e {}'\0' \; \
+  | du -hc --files0-from=- \
+  | tail -n 1 \
+  | awk '{print $1}')"
+
+logger "${PROG} about to delete ${SAVED_SPACE} ..."
+
+find ${WHISPER_DATA} \
+  -type f \
+  -name "*.wsp" \
+  -mtime +${DAYS} \
+  -exec rm '{}' \;
+
+EMPTY_FOLDERS="$(find \
+  ${WHISPER_DATA} \
+  -type d \
+  -empty \
+  | wc -l)"
+
+logger "${PROG} about to delete ${EMPTY_FOLDERS} folders ..."
+
+find ${WHISPER_DATA} \
+  -type d \
+  -empty \
+  -delete
+
+logger "${PROG} ... done!"

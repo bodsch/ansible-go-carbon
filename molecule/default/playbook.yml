@@ -3,10 +3,12 @@
   any_errors_fatal: false
   environment:
     NETRC: ''
+  vars:
+    go_carbon_storage_schema:
+      test:
+        pattern: '^test\.'
+        retentions: '5m:30d'
+    go_carbon_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
+
   roles:
     - role: ansible-go-carbon
-      vars:
-        go_carbon_storage_schema:
-          test:
-            pattern: '^test\.'
-            retentions: '5m:30d'
