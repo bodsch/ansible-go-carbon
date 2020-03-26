@@ -12,7 +12,7 @@ graphite_user: carbon
 graphite_group: carbon
 
 go_carbon_used_cron_daemon: cronie
-go_carbon_clean_data_enabled: True
+go_carbon_clean_data_enabled: False
 go_carbon_clean_data_after_days: 180
 
 # common config

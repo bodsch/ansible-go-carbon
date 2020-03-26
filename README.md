@@ -33,6 +33,17 @@ I use a small (with my modifications) Script from [unixe.de](https://www.unixe.d
 
 **This page is highly recommended, which is what I am doing with it.**)
 
+You should make sure that a cron-daemon is installed.
+For *RedHat* based systems `cronie` can be used.
+For *Debian* based systems `cron` is available.
+
+You can set the cron-daemon over `go_carbon_used_cron_daemon`.
+
+**Support for systemd is currently not planned.**
+
+To active this feature set `go_carbon_clean_data_enabled` to `True`
+
+
 ## example configuration
 
 ```
