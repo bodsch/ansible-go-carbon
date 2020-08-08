@@ -71,4 +71,3 @@ go_carbon_storage_default_aggregation:
     pattern: '.*'
     xFilesFactor: 0.5
     aggregationMethod: average
-

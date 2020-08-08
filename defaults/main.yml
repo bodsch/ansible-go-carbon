@@ -1,6 +1,6 @@
 ---
 
-go_carbon_version: 0.14.0
+go_carbon_version: 0.15.0
 
 # Allow pre-release (beta) versions
 go_carbon_pre_release: true
@@ -12,7 +12,7 @@ graphite_user: carbon
 graphite_group: carbon
 
 go_carbon_used_cron_daemon: cronie
-go_carbon_clean_data_enabled: False
+go_carbon_clean_data_enabled: false
 go_carbon_clean_data_after_days: 180
 
 # common config
@@ -67,14 +67,6 @@ go_carbon_logging:
     encoding_duration: seconds
 
 go_carbon_storage_schema:
-  telegraf:
-    # 1 Host and 1 Metric produce: 105.51 Kilobytes
-    pattern: '^telegraf\.'
-    retentions: '10s:2d,1m:6h,5m:30d'
-  grafana:
-    # 1 Host and 1 Metric produce: 556.94 Kilobytes
-    pattern: '^grafana\.'
-    retentions: '1m:15d,5m:30d,15m:120d,1h:240d'
   icinga2:
     # 1 Host and 1 Metric produce: 556.94 Kilobytes
     pattern: '^icinga2\.'

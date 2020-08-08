@@ -1,6 +1,6 @@
 # ansible role for go-carbon
 
-Ansible Role for [go-carbon](https://github.com/lomik/go-carbon).
+Ansible Role for [go-carbon](https://github.com/go-graphite/go-carbon).
 > Golang implementation of Graphite/Carbon server with classic architecture: Agent -> Cache -> Persister
 
 ## configure
