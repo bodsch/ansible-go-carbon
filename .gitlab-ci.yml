@@ -1,20 +1,18 @@
 ---
-# image: python:3.8
-# image: bodsch/molecule-dind
 
 image: docker:latest
 
 services:
-  - bodsch/molecule-dind
+  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-#services:
-#  - name: bodsch/molecule-dind
 
 before_script:
+  - apk add --quiet --no-cache py3-pip
+  - ln -sf /usr/bin/python3 /usr/bin/python
   - python --version || true
   - python2 --version || true
   - python3 --version || true
