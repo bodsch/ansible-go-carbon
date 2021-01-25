@@ -1,0 +1,28 @@
+---
+image: bodsch/molecule-dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+prepare:
+  stage: build
+
+  before_script:
+    - /usr/bin/python --version
+    - docker --version
+    - docker info
+
+  script:
+    - /usr/bin/python -m pip install --upgrade pip
+    - pip install -r test-requirements.txt
+    - tox --listenvs
+    - /usr/bin/python --version
+    - ansible --version
+
+test-job-default:
+  stage: test
+  script:
+    - echo "Test default"
+    - tox -e py38-ansible210 -- molecule test --scenario-name default
+
