@@ -1,12 +1,13 @@
 ---
-image: python:3.8
+# image: python:3.8
+image: bodsch/molecule-dind
 
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-services:
-  - name: bodsch/molecule-dind
+#services:
+#  - name: bodsch/molecule-dind
 
 before_script:
   - python --version
