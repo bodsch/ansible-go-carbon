@@ -1,45 +1,27 @@
 ---
-
-image: docker:latest
-
-services:
-  - docker:dind
+image: bodsch/molecule-dind
 
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-
-before_script:
-  - apk add --quiet --no-cache py3-pip
-  - ln -sf /usr/bin/python3 /usr/bin/python
-  - python --version || true
-  - python2 --version || true
-  - python3 --version || true
-  - docker version
-
-stages:
-  - prepare  
-  - test
-
 prepare:
-  stage: prepare
-
-#  before_script:
-#    - /usr/bin/python --version
-#    - docker --version
-#    - docker info
+  stage: build
 
   script:
-    - /usr/bin/python -m pip install --upgrade pip
-    - pip install -r test-requirements.txt
-    - tox --listenvs
-    - /usr/bin/python --version
+    - pip install --quiet --requirement test-requirements.txt
+
+  after_script:
+    - python --version
+    - docker --version
     - ansible --version
 
 test-job-default:
   stage: test
   script:
     - echo "Test default"
+    - pip install --quiet --requirement test-requirements.txt
     - tox -e py38-ansible210 -- molecule test --scenario-name default
+  artifacts:
+    expire_in: 1 day
 
