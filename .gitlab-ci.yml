@@ -1,17 +1,28 @@
 ---
-image: bodsch/molecule-dind
+# image: bodsch/molecule-dind
 
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-prepare:
-  stage: build
+services:
+  - name: bodsch/molecule-dind
 
-  before_script:
-    - /usr/bin/python --version
-    - docker --version
-    - docker info
+before_script:
+  - python --version
+  - docker version
+
+stages:
+  # - prepare  
+  - test
+
+prepare:
+  stage: prepare
+
+#  before_script:
+#    - /usr/bin/python --version
+#    - docker --version
+#    - docker info
 
   script:
     - /usr/bin/python -m pip install --upgrade pip
