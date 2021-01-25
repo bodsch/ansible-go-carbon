@@ -1,5 +1,5 @@
 ---
-image: bodsch/molecule-dind
+image: bodsch/molecule-dind:2101
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -9,9 +9,6 @@ prepare:
   stage: build
 
   script:
-    - pip install --quiet --requirement test-requirements.txt
-
-  after_script:
     - python --version
     - docker --version
     - ansible --version
@@ -20,7 +17,6 @@ test-job-default:
   stage: test
   script:
     - echo "Test default"
-    - pip install --quiet --requirement test-requirements.txt
     - tox -e py38-ansible210 -- molecule test --scenario-name default
   artifacts:
     expire_in: 1 day
