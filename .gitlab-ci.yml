@@ -1,5 +1,5 @@
 ---
-# image: bodsch/molecule-dind
+image: ubuntu:20.04
 
 variables:
   DOCKER_DRIVER: overlay2
