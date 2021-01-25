@@ -15,14 +15,16 @@ variables:
 #  - name: bodsch/molecule-dind
 
 before_script:
-  - python --version
+  - python --version || true
+  - python2 --version || true
+  - python3 --version || true
   - docker version
 
 stages:
-  # - prepare  
+  - prepare  
   - test
 
-.pre:
+prepare:
   stage: prepare
 
 #  before_script:
