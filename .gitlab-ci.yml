@@ -5,7 +5,7 @@
 image: docker:latest
 
 services:
-  - docker:dind
+  - bodsch/molecule-dind
 
 variables:
   DOCKER_DRIVER: overlay2
