@@ -51,19 +51,14 @@ provisioner:
   #   - -vvv
   config_options:
     defaults:
-      host_key_checking: False
       deprecation_warnings: True
-      interpreter_python: auto
-      # callback_whitelist: profile_tasks
-      # gather_subset: '!hardware'
+      stdout_callback: yaml
+    diff:
+      always: True
 
   lint:
     name: ansible-lint
-  playbooks:
-    create: create.yml
-    prepare: prepare.yml
-    converge: playbook.yml
-    destroy: destroy.yml
+
 
 scenario:
   test_sequence:
