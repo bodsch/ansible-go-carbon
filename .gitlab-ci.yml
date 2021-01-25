@@ -20,4 +20,3 @@ test-job-default:
     - tox -e py38-ansible210 -- molecule test --scenario-name default
   artifacts:
     expire_in: 1 day
-
