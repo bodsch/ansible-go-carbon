@@ -16,7 +16,7 @@ stages:
   # - prepare  
   - test
 
-prepare:
+.pre:
   stage: prepare
 
 #  before_script:
