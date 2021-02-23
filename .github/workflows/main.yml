@@ -10,7 +10,7 @@ name: CI
 
 defaults:
   run:
-    working-directory: 'ansible-syslog-ng'
+    working-directory: 'ansible-go-carbon'
 
 jobs:
 
@@ -21,7 +21,7 @@ jobs:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'ansible-syslog-ng'
+          path: 'ansible-go-carbon'
 
       - name: set up python.
         uses: actions/setup-python@v2
@@ -75,7 +75,7 @@ jobs:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'ansible-syslog-ng'
+          path: 'ansible-go-carbon'
 
       - name: set up python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
