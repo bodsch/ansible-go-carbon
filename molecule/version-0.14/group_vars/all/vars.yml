@@ -1,0 +1,12 @@
+---
+ansible_python_interpreter: python3
+
+go_carbon_version: 0.14.0
+
+go_carbon_storage_schema:
+  test:
+    pattern: '^test\.'
+    retentions: '5m:30d'
+
+go_carbon_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
+go_carbon_clean_data_enabled: false

@@ -4,3 +4,11 @@
   service:
     name: go-carbon
     state: restarted
+
+- name: daemon-reload
+  systemd:
+    daemon_reload: true
+    force: true
+  notify: restart go-carbon
+  when:
+    - ansible_service_mgr == 'systemd'
