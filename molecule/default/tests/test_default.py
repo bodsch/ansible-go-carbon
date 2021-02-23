@@ -84,7 +84,7 @@ def test_files(host, files):
 def test_carbon_config(host, get_vars):
     config_file = "/etc/go-carbon/go-carbon.conf"
     content = host.file(config_file).content_string
-    assert 'data-dir = "%s"' % ( get_vars['go_carbon_whisper_data_directory'] ) in content
+    assert 'data-dir = "{}"'.format(get_vars.get('go_carbon_whisper_data_directory')) in content
 
 
 def test_storage_schemas(host):
@@ -108,8 +108,8 @@ def test_solr_service(host):
     service = host.service("go-carbon")
 
     # if( service.__class__.__name__ != 'SysvService' ):
-    assert service.is_enabled == True
-    assert service.is_running == True
+    assert service.is_enabled
+    assert service.is_running
 
 
 @pytest.mark.parametrize("ports", [
@@ -120,7 +120,7 @@ def test_solr_service(host):
 ])
 def test_open_port(host, ports):
     for i in host.socket.get_listening_sockets():
-        print( i )
+        print(i)
 
     solr = host.socket("tcp://{}".format(ports))
     assert solr.is_listening
