@@ -53,6 +53,7 @@ def get_vars(host):
 
     return result
 
+
 def test_whisper_directory(host, get_vars):
     dir = host.file(get_vars['go_carbon_whisper_data_directory'])
     assert dir.exists
