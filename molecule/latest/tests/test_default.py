@@ -105,7 +105,7 @@ def test_user(host):
     assert host.user("carbon").home == "/home/graphite"
 
 
-def test_solr_service(host):
+def test_service(host):
     service = host.service("go-carbon")
 
     # if( service.__class__.__name__ != 'SysvService' ):
@@ -123,5 +123,5 @@ def test_open_port(host, ports):
     for i in host.socket.get_listening_sockets():
         print(i)
 
-    solr = host.socket("tcp://{}".format(ports))
-    assert solr.is_listening
+    service = host.socket("tcp://{}".format(ports))
+    assert service.is_listening
