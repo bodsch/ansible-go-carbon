@@ -4,6 +4,7 @@
   template:
     src: etc/go-carbon/go-carbon.conf.j2
     dest: /etc/go-carbon/go-carbon.conf
+    mode: 0660
     backup: true
   notify:
     - restart go-carbon
@@ -12,6 +13,7 @@
   template:
     src: etc/go-carbon/storage-schemas.conf.j2
     dest: /etc/go-carbon/storage-schemas.conf
+    mode: 0660
     backup: true
   notify:
     - restart go-carbon
@@ -20,6 +22,7 @@
   template:
     src: etc/go-carbon/storage-aggregation.conf.j2
     dest: /etc/go-carbon/storage-aggregation.conf
+    mode: 0660
     backup: true
   notify:
     - restart go-carbon

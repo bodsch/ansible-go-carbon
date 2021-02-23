@@ -1,0 +1,30 @@
+---
+image: bodsch/molecule-dind:2101
+
+# Cache modules in between jobs
+#cache:
+#  key: ${CI_COMMIT_REF_SLUG}
+#  paths:
+#    - .tox/
+#    - .cache/pip
+#    - venv/
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+prepare:
+  stage: build
+
+  script:
+    - python --version
+    - docker --version
+    - ansible --version
+
+test-job-default:
+  stage: test
+  script:
+    - echo "Test default"
+    - tox -e py38-ansible210 -- molecule test --scenario-name default
+  artifacts:
+    expire_in: 1 day
