@@ -4,6 +4,12 @@
   gather_facts: true
 
   pre_tasks:
+    - name: install netstat
+      package:
+        name: [ net-tools, iproute2 ]
+        state: present
+      when:
+        - ansible_os_family | lower == 'archlinux'
 
     - debug:
         msg:

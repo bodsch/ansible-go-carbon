@@ -1,6 +1,6 @@
 ---
 
-- name: ensure go-carbon is started
+- name: ensure go-carbon is started and enabled
   service:
     name: go-carbon
     state: started

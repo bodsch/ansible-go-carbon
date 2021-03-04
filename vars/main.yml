@@ -9,6 +9,7 @@ go_arch_map:
 
 go_arch: "{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
 
+go_carbon_artefact: "go-carbon_{{ go_carbon_version }}"
 
 _systemd_lib_directory:
   default: /lib/systemd/system
@@ -18,7 +19,6 @@ _systemd_lib_directory:
 systemd_lib_directory: "{{
   _systemd_lib_directory[ansible_os_family | lower] |
   default(_systemd_lib_directory['default']) }}"
-
 
 go_carbon_storage_default_schema:
   carbon:
