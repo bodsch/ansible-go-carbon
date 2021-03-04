@@ -19,6 +19,10 @@ galaxy_info:
         - etch
         # 10
         - buster
+    - name: EL
+      versions:
+        - 8
+    - name: ArchLinux
 
   galaxy_tags:
     - graph
