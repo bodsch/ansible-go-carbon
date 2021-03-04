@@ -1,0 +1,41 @@
+---
+
+- name: assert version
+  assert:
+    that: go_carbon_version is version_compare('0.15.3', '>=')
+    msg: "This role only works with go-carbon >= 0.15.3 .. you want install {{ go_carbon_version }}"
+  when:
+    - go_carbon_version != 'latest'
+
+- name: merge storage schema between defaults and custom
+  set_fact:
+    go_carbon_storage_schemas: "{{ go_carbon_storage_default_schema | combine( go_carbon_storage_schema ) }}"
+
+- name: merge storage aggregation between defaults and custom
+  set_fact:
+    go_carbon_storage_aggregations: "{{ go_carbon_storage_default_aggregation | combine( go_carbon_storage_aggregation, recursive=True ) }}"
+
+- name: create {{ graphite_group }} group
+  group:
+    name: "{{ graphite_group }}"
+    state: present
+
+- name: create {{ graphite_user }} user
+  user:
+    name: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    shell: /sbin/nologin
+    createhome: true
+    comment: Graphite user
+    home: /home/graphite
+
+- name: create required directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    mode: 0750
+  loop:
+    - "{{ go_carbon_whisper_data_directory }}"
+    - /var/log/go-carbon

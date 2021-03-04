@@ -1,6 +1,6 @@
 ---
 
-go_carbon_version: 0.15.0
+go_carbon_version: latest
 
 # Allow pre-release (beta) versions
 go_carbon_pre_release: true
@@ -73,3 +73,5 @@ go_carbon_storage_schema:
     retentions: '1m:15d,5m:30d,15m:120d,1h:240d'
 
 go_carbon_storage_aggregation: {}
+
+go_carbon_enable_logrotate: true

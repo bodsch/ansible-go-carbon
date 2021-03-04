@@ -1,5 +1,11 @@
 ---
 
+- name: create config directory
+  file:
+    dest: /etc/go-carbon
+    state: directory
+    mode: 0750
+
 - name: create go-carbon.conf
   template:
     src: etc/go-carbon/go-carbon.conf.j2

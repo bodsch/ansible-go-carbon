@@ -1,14 +1,14 @@
 ---
 
-- include: variables.yml
+- include: prepare.yml
   become: true
   tags:
     - preparations
 
-- include: preparations.yml
+- include: download.yml
   become: true
   tags:
-    - preparations
+    - installation
 
 - include: installation.yml
   become: true

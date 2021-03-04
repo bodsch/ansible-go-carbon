@@ -1,63 +1,60 @@
 ---
 
-- name: download go-carbon binary v{{ go_carbon_version }} to local folder
-  become: false
-  get_url:
-    url: "https://github.com/go-graphite/go-carbon/releases/download/v{{ go_carbon_version }}/{{ go_carbon_artefact }}"
-    dest: "/tmp/{{ go_carbon_artefact }}"
-  register: _download_archive
-  until: _download_archive is succeeded
-  retries: 5
-  delay: 2
-  delegate_to: localhost
-  check_mode: false
-
-- name: propagate go-carbon package
+- name: propagate go-carbon
   copy:
     src: "/tmp/{{ go_carbon_artefact }}"
-    dest: /tmp
+    dest: "/usr/bin/go-carbon_{{ go_carbon_version }}"
     mode: 0755
     owner: root
     group: root
 
-- name: set force install
-  set_fact:
-    force_install: "{{ false
-      if go_carbon_installed_version.changed
-      else go_carbon_installed_version.stdout is version(go_carbon_version |
-      regex_replace('^v',''), '>') }}"  # noqa 204
-
-- name: install go-carbon package for debian based systems
-  apt:
-    deb: "/tmp/{{ go_carbon_artefact }}"
-    force: "{{ force_install | bool }}"
-  when: ( go_carbon_should_install and
-    ansible_os_family | lower == 'debian')
-
-- name: install go-carbon package for redhat based systems
-  yum:
-    name: "/tmp/{{ go_carbon_artefact }}"
-    allow_downgrade: "{{ force_install | bool }}"
-  when: ( go_carbon_should_install and
-    ansible_os_family | lower == 'redhat')
-
-# configure proxy settings if enabled
-- name: create dropin directory
+- name: create link from go-carbon_{{ go_carbon_version }}
   file:
-    path: "/etc/systemd/system/go-carbon.service.d"
-    state: "directory"
-    mode: 0750
-    owner: root
-    group: root
+    src: "/usr/bin/go-carbon_{{ go_carbon_version }}"
+    dest: /usr/bin/go-carbon
+    state: link
+    force: true
+  notify:
+    - restart go-carbon
 
-- name: add systemd dropin to using configuration
+- name: create systemd unit file
   template:
-    src: etc/systemd/overwrite.conf.j2
-    dest: "/etc/systemd/system/go-carbon.service.d/overwrite.conf"
+    src: etc/systemd/go-carbon.service.j2
+    dest: "{{ systemd_lib_directory }}/go-carbon.service"
     mode: 0640
     owner: root
     group: root
+  when:
+    - ansible_service_mgr == 'systemd'
   notify: daemon-reload
+
+- name: create sysv start-stop file
+  template:
+    src: etc/init.d/go-carbon.j2
+    dest: /etc/init.d/go-carbon
+    mode: 0640
+    owner: root
+    group: root
+  when:
+    - ansible_service_mgr != 'systemd'
+
+- name: logrotate
+  block:
+    - name: create logrotate.d directory
+      file:
+        path: /etc/logrotate.d
+        state: directory
+        mode: 0755
+
+    - name: create logrotate config file
+      template:
+        src: etc/logrotate.d/go-carbon.j2
+        dest: /etc/logrotate.d/go-carbon
+        mode: 0640
+        owner: root
+        group: root
+  when:
+    - go_carbon_enable_logrotate
 
 - name: install script to clean whisper data
   template:
@@ -81,9 +78,10 @@
         user: root
         job: /usr/local/bin/clean-whisper-data.sh
         cron_file: clean_whisper_data
-
-  when: go_carbon_used_cron_daemon is defined and go_carbon_used_cron_daemon | length != 0 and
-     go_carbon_clean_data_enabled | bool
+  when:
+    - go_carbon_used_cron_daemon is defined
+    - go_carbon_used_cron_daemon | length != 0
+    - go_carbon_clean_data_enabled | bool
 
 - name: remove clean-whisper script 2/m for cron
   cron:
@@ -92,5 +90,7 @@
     cron_file: clean_whisper_data
     state: absent
   failed_when: false
-  when: go_carbon_used_cron_daemon is defined and go_carbon_used_cron_daemon | length != 0 and
-     not go_carbon_clean_data_enabled | bool
+  when:
+    - go_carbon_used_cron_daemon is defined
+    - go_carbon_used_cron_daemon | length != 0
+    - not go_carbon_clean_data_enabled | bool

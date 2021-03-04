@@ -1,0 +1,57 @@
+---
+
+- block:
+    - name: get latest release
+      uri:
+        url: "https://api.github.com/repos/go-graphite/go-carbon/releases/latest"
+        method: GET
+        return_content: true
+        status_code: 200
+        body_format: json
+        validate_certs: false
+        user: "{{ lookup('env', 'GH_USER') | default(omit) }}"
+        password: "{{ lookup('env', 'GH_TOKEN') | default(omit) }}"
+      no_log: "{{ not lookup('env', 'ANSIBLE_DEBUG') | bool }}"
+      register: _latest_release
+      until: _latest_release.status == 200
+      retries: 5
+
+    - name: set go-carbon version
+      set_fact:
+        go_carbon_version: "{{ _latest_release.json.tag_name[1:] }}"
+  when:
+    - go_carbon_version == 'latest'
+
+# - name: if installation required
+#   set_fact:
+#     go_carbon_should_install: "{{ true
+#       if go_carbon_installed_version.changed
+#       else go_carbon_installed_version.stdout is version( go_carbon_version |
+#       regex_replace('^v',''), '!=' )
+#       if go_carbon_latest else false }}"  # noqa 204
+
+- name: download go-carbon binary v{{ go_carbon_version }} to local folder
+  become: false
+  get_url:
+    url: "https://github.com/go-graphite/go-carbon/releases/download/v{{ go_carbon_version }}/go-carbon-linux-{{ go_arch }}"
+    dest: "/tmp/{{ go_carbon_artefact }}"
+  register: _download_archive
+  until: _download_archive is succeeded
+  retries: 5
+  delay: 2
+  delegate_to: localhost
+  check_mode: false
+
+#- name: set artefact name for download
+#  set_fact:
+#    go_carbon_artefact: "go-carbon-linux-{{ go_arch }}"
+
+# - name: set artefact name for download
+#   set_fact:
+#     go_carbon_artefact: "go-carbon_{{ go_carbon_version }}_{{ go_arch }}.deb"
+#   when: ansible_os_family | lower == 'debian'
+#
+# - name: set artefact name for download
+#   set_fact:
+#     go_carbon_artefact: "go-carbon-{{ go_carbon_version }}-1.{{ ansible_machine }}.rpm"
+#   when: ansible_os_family | lower == 'redhat'
