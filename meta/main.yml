@@ -2,6 +2,8 @@
 
 galaxy_info:
   role_name: go_carbon
+  namespace: bodsch
+
   author: Bodo Schulz
   description: Golang implementation of Graphite/Carbon server
   license: "Apache"
