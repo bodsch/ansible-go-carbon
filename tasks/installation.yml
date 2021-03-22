@@ -36,7 +36,17 @@
     owner: root
     group: root
   when:
-    - ansible_service_mgr != 'systemd'
+    - ansible_service_mgr == 'sysvinit'
+
+- name: create openrc start-stop file
+  template:
+    src: etc/openrc/go-carbon.j2
+    dest: /etc/init.d/go-carbon
+    mode: 0640
+    owner: root
+    group: root
+  when:
+    - ansible_service_mgr == 'openrc'
 
 - name: logrotate
   block:
