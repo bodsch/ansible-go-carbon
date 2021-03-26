@@ -1,8 +1,6 @@
 #!/usr/bin/openrc-run
 # Copyright 1999-2017 Gentoo Foundation
 
-# set -x
-
 description="Graphite/Carbon server"
 command="/usr/bin/go-carbon"
 pidfile="/run/go-carbon.pid"
@@ -16,11 +14,5 @@ start() {
 
   ebegin "Starting go-carbon"
   eval start-stop-daemon --start --background --exec $command
-  eend $?
-}
-
-stop_x() {
-  ebegin "Stopping go-carbon"
-  start-stop-daemon --stop --signal 2 --quiet --pidfile $pidfile
   eend $?
 }
