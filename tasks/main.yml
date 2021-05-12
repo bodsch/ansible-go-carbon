@@ -4,6 +4,7 @@
   become: true
   tags:
     - preparations
+    - configure #needed to load default vars (see merge ... between defaults and custom) 
 
 - include: download.yml
   become: true
