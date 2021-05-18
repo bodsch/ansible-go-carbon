@@ -3,25 +3,25 @@
 - include: prepare.yml
   become: true
   tags:
-    - preparations
-    - configure #needed to load default vars (see merge ... between defaults and custom) 
+    - go-carbon_prepare
+    - go-carbon_configure #needed to load default vars (see merge ... between defaults and custom)
 
 - include: download.yml
   become: true
   tags:
-    - installation
+    - go-carbon_install
 
-- include: installation.yml
+- include: install.yml
   become: true
   tags:
-    - installation
+    - go-carbon_install
 
 - include: configure.yml
   become: true
   tags:
-    - configure
+    - go-carbon_configure
 
 - include: service.yml
   become: true
   tags:
-    - service
+    - go-carbon_service
