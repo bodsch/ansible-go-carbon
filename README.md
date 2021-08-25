@@ -1,4 +1,6 @@
 
+# Ansible Role:  `go-carbon`
+
 Ansible role to install and configure [go-carbon](https://github.com/go-graphite/go-carbon).
 
 > Golang implementation of Graphite/Carbon server with classic architecture: Agent -> Cache -> Persister
@@ -18,7 +20,7 @@ Ansible role to install and configure [go-carbon](https://github.com/go-graphite
 
 define your own *storage schemas*:
 
-```
+```yaml
 go_carbon_storage_schema:
   test:
     pattern: '^test\.'
@@ -27,7 +29,7 @@ go_carbon_storage_schema:
 
 define your own *storage aggregation*:
 
-```
+```yaml
 go_carbon_storage_aggregation:
   count:
     pattern: '\.count$'
@@ -59,7 +61,7 @@ To active this feature set `go_carbon_clean_data_enabled` to `true`
 
 ## example configuration
 
-```
+```yaml
 go_carbon_whisper_data_directory: /opt/graphite/whisper
 
 go_carbon_storage_schema:
@@ -78,7 +80,8 @@ go_carbon_storage_schema:
 ```
 
 ## example playbook
-```
+
+```yaml
 - hosts: monitoring
   gather_facts: true
   become: true
@@ -95,24 +98,24 @@ You can use a set of test:
 
 ### default
 
-```
-$ tox -e py39-ansible29 -- molecule test -s default
+```bash
+tox -e py39-ansible29 -- molecule test -s default
 ```
 
 ### letest version from github
 
-```
-$ tox -e py39-ansible29 -- molecule test -s latest
+```bash
+tox -e py39-ansible29 -- molecule test -s latest
 ```
 
 ### latest version with automatic clean of older whisper data
 
-```
-$ tox -e py39-ansible29 -- molecule test -s latest-with-clean-data
+```bash
+tox -e py39-ansible29 -- molecule test -s latest-with-clean-data
 ```
 
 ### named version
 
-```
-$ tox -e py39-ansible29 -- molecule test -s version-0.14
+```bash
+tox -e py39-ansible29 -- molecule test -s version-0.14
 ```
