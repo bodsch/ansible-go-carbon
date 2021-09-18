@@ -1,4 +1,4 @@
-
+---
 skip_list:
   - role-name                 # '106'  # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
   - no-changed-when           # '301'  # Commands should not change things if nothing needs doing
