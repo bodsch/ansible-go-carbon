@@ -1,6 +1,6 @@
 ---
 
-go_carbon_version: latest
+go_carbon_version: 0.15.6
 
 # Allow pre-release (beta) versions
 go_carbon_pre_release: true
